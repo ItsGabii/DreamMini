@@ -69,134 +69,139 @@ class DreamMini : KotlinPlugin(), Listener {
 			}
 		}
 
-		// Remover mensagem de entrada/saída
-		e.joinMessage = null
-		joined.add(e.player)
+		if (config.getBoolean("fancy-join", true)) {
+			// Remover mensagem de entrada/saída
+			e.joinMessage = null
+			joined.add(e.player)
 
-		currentJoinSchedule?.cancel()
+			currentJoinSchedule?.cancel()
 
-		val schedule = scheduler().schedule(this) {
-			waitFor(20 * 7) // Esperar sete segundos
-			val joinedPlayers = joined.filter { it.isOnline }
+			val schedule = scheduler().schedule(this) {
+				waitFor(20 * 7) // Esperar sete segundos
+				val joinedPlayers = joined.filter { it.isOnline }
 
-			if (joinedPlayers.isEmpty())
-				return@schedule
+				if (joinedPlayers.isEmpty())
+					return@schedule
 
-			val aux = if (joinedPlayers.size == 1) {
-				"entrou"
-			} else {
-				"entraram"
+				val aux = if (joinedPlayers.size == 1) {
+					"entrou"
+				} else {
+					"entraram"
+				}
+
+				broadcast("§8[§a+§8] §b${joinedPlayers.joinToString("§a, §b", transform = { it.name })}§a $aux no jogo!")
+
+				joined.clear()
 			}
 
-			broadcast("§8[§a+§8] §b${joinedPlayers.joinToString("§a, §b", transform = { it.name })}§a $aux no jogo!")
+			currentJoinSchedule = schedule
 
-			joined.clear()
+			// Spawnar fireworks com cores aleatórias quando o player entrar no servidor
+			var r = DreamUtils.random.nextInt(0, 256)
+			var g = DreamUtils.random.nextInt(0, 256)
+			var b = DreamUtils.random.nextInt(0, 256)
+
+			var fadeR = Math.max(0, r - 60)
+			var fadeG = Math.max(0, g - 60)
+			var fadeB = Math.max(0, b - 60)
+
+			val fireworkEffect = FireworkEffect.builder()
+					.withTrail()
+					.withColor(Color.fromRGB(r, g, b))
+					.withFade(Color.fromRGB(fadeR, fadeG, fadeB))
+					.with(FireworkEffect.Type.values()[DreamUtils.random.nextInt(0, FireworkEffect.Type.values().size)])
+					.build()
+
+			val firework = e.player.world.spawnEntity(e.player.location, EntityType.FIREWORK) as Firework
+			val fireworkMeta = firework.fireworkMeta
+
+			fireworkMeta.power = 1
+			fireworkMeta.addEffect(fireworkEffect)
+
+			firework.fireworkMeta = fireworkMeta
 		}
-
-		currentJoinSchedule = schedule
-
-		// Spawnar fireworks com cores aleatórias quando o player entrar no servidor
-		var r = DreamUtils.random.nextInt(0, 256)
-		var g = DreamUtils.random.nextInt(0, 256)
-		var b = DreamUtils.random.nextInt(0, 256)
-
-		var fadeR = Math.max(0, r - 60)
-		var fadeG = Math.max(0, g - 60)
-		var fadeB = Math.max(0, b - 60)
-
-		val fireworkEffect = FireworkEffect.builder()
-				.withTrail()
-				.withColor(Color.fromRGB(r, g, b))
-				.withFade(Color.fromRGB(fadeR, fadeG, fadeB))
-				.with(FireworkEffect.Type.values()[DreamUtils.random.nextInt(0, FireworkEffect.Type.values().size)])
-				.build()
-
-		val firework = e.player.world.spawnEntity(e.player.location, EntityType.FIREWORK) as Firework
-		val fireworkMeta = firework.fireworkMeta
-
-		fireworkMeta.power = 1
-		fireworkMeta.addEffect(fireworkEffect)
-
-		firework.fireworkMeta = fireworkMeta
 	}
 
 	@EventHandler
 	fun onQuit(e: PlayerQuitEvent) {
-		// Remover mensagem de entrada/saída
-		e.quitMessage = null
-		left.add(e.player)
+		if (getConfig().getBoolean("fancy-quit", true)) {
+			// Remover mensagem de entrada/saída
+			e.quitMessage = null
+			left.add(e.player)
 
-		currentLeftSchedule?.cancel()
+			currentLeftSchedule?.cancel()
 
-		val schedule = scheduler().schedule(this) {
-			waitFor(20 * 7) // Esperar sete segundos
-			val leftPlayers = left.filter { !it.isOnline }
+			val schedule = scheduler().schedule(this) {
+				waitFor(20 * 7) // Esperar sete segundos
+				val leftPlayers = left.filter { !it.isOnline }
 
-			if (leftPlayers.isEmpty())
-				return@schedule
+				if (leftPlayers.isEmpty())
+					return@schedule
 
-			val aux = if (leftPlayers.size == 1) {
-				"saiu"
-			} else {
-				"sairam"
+				val aux = if (leftPlayers.size == 1) {
+					"saiu"
+				} else {
+					"sairam"
+				}
+
+				broadcast("§8[§c-§8] §b${leftPlayers.joinToString("§c, §b", transform = { it.name })}§c $aux do jogo...")
+
+				left.clear()
 			}
 
-			broadcast("§8[§c-§8] §b${leftPlayers.joinToString("§c, §b", transform = { it.name })}§c $aux do jogo...")
-
-			left.clear()
+			currentLeftSchedule = schedule
 		}
-
-		currentLeftSchedule = schedule
-
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	fun onItemDrop(e: PlayerDropItemEvent) {
-		val type = e.itemDrop?.itemStack?.type
-		val player = e.player
+		if (config.getBoolean("special-lucky-drop-item", true)) {
+			val type = e.itemDrop?.itemStack?.type
+			val player = e.player
 
-		if (type == Material.GOLD_NUGGET || type == Material.GOLD_INGOT || type == Material.GOLD_BLOCK) {
-			scheduler().schedule(this) {
-				waitFor(1)
-				for (idx in 0 until 10) {
-					if (!e.itemDrop.isValid)
-						return@schedule
-
-					val location = e.itemDrop.location
-
-					if (location.block.type == Material.WATER || location.block.type == Material.STATIONARY_WATER) {
-						if (WorldGuardUtils.isWithinRegion(location, "loja-sorte")) {
-							var rewarded = false
-							for (amount in 0 until e.itemDrop.itemStack.amount) {
-								var chance = DreamUtils.random.nextInt(0, 101)
-
-								if (type == Material.GOLD_INGOT) {
-									chance = Math.min(chance * 2, 100)
-								}
-								if (type == Material.GOLD_BLOCK) {
-									chance = Math.min(chance * 4, 100)
-								}
-
-								// TODO: Prêmios
-								if (chance == 100) {
-									player.balance += 1750
-									player.sendMessage("§aHoje é o seu dia de sorte!")
-									rewarded = true
-								}
-							}
-							if (rewarded) {
-								e.itemDrop.location.world.spawnParticle(Particle.VILLAGER_HAPPY, e.itemDrop.location, 5, 0.5, 0.5, 0.5)
-							} else {
-								e.player.sendMessage("§cQue pena, pelo visto você não ganhou nada...")
-								e.itemDrop.location.world.spawnParticle(Particle.VILLAGER_ANGRY, e.itemDrop.location, 5, 0.5, 0.5, 0.5)
-							}
-							e.itemDrop.remove()
+			if (type == Material.GOLD_NUGGET || type == Material.GOLD_INGOT || type == Material.GOLD_BLOCK) {
+				scheduler().schedule(this) {
+					waitFor(1)
+					for (idx in 0 until 10) {
+						if (!e.itemDrop.isValid)
 							return@schedule
+
+						val location = e.itemDrop.location
+
+						if (location.block.type == Material.WATER || location.block.type == Material.STATIONARY_WATER) {
+							if (WorldGuardUtils.isWithinRegion(location, "loja-sorte")) {
+								var rewarded = false
+								for (amount in 0 until e.itemDrop.itemStack.amount) {
+									var chance = DreamUtils.random.nextInt(0, 101)
+
+									if (type == Material.GOLD_INGOT) {
+										chance = Math.min(chance * 2, 100)
+									}
+									if (type == Material.GOLD_BLOCK) {
+										chance = Math.min(chance * 4, 100)
+									}
+
+									// TODO: Prêmios
+									if (chance == 100) {
+										player.balance += 1750
+										player.sendMessage("§aHoje é o seu dia de sorte!")
+										rewarded = true
+									}
+								}
+								if (rewarded) {
+									e.itemDrop.location.world.spawnParticle(Particle.VILLAGER_HAPPY, e.itemDrop.location, 5, 0.5, 0.5, 0.5)
+								} else {
+									e.player.sendMessage("§cQue pena, pelo visto você não ganhou nada...")
+									e.itemDrop.location.world.spawnParticle(Particle.VILLAGER_ANGRY, e.itemDrop.location, 5, 0.5, 0.5, 0.5)
+								}
+								e.itemDrop.remove()
+								return@schedule
+							}
 						}
+						waitFor(10)
 					}
-					waitFor(10)
+					return@schedule
 				}
-				return@schedule
 			}
 		}
 	}
