@@ -1,6 +1,7 @@
 package net.perfectdreams.dreammini.commands
 
 import net.perfectdreams.libs.acf.BaseCommand
+import net.perfectdreams.libs.acf.annotation.CatchUnknown
 import net.perfectdreams.libs.acf.annotation.CommandAlias
 import net.perfectdreams.libs.acf.annotation.CommandPermission
 import net.perfectdreams.libs.acf.annotation.Default
@@ -14,6 +15,7 @@ import java.util.*
 @CommandPermission("dreammini.memory")
 class MemoryCommand : BaseCommand() {
 	@Default
+	@CatchUnknown
 	fun onCommand(p0: CommandSender, p3: Array<String>): Boolean {
 		val arg = p3.getOrNull(0)
 

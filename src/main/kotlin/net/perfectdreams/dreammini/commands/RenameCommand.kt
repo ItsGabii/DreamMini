@@ -2,6 +2,7 @@ package net.perfectdreams.dreammini.commands
 
 import net.perfectdreams.dreamcore.utils.translateColorCodes
 import net.perfectdreams.libs.acf.BaseCommand
+import net.perfectdreams.libs.acf.annotation.CatchUnknown
 import net.perfectdreams.libs.acf.annotation.CommandAlias
 import net.perfectdreams.libs.acf.annotation.CommandPermission
 import net.perfectdreams.libs.acf.annotation.Default
@@ -13,6 +14,7 @@ import org.bukkit.entity.Player
 @CommandPermission("dreammini.rename")
 class RenameCommand : BaseCommand() {
 	@Default
+	@CatchUnknown
 	fun onCommand(p0: CommandSender, p3: Array<String>): Boolean {
 		val name = p3.joinToString(" ").translateColorCodes()
 

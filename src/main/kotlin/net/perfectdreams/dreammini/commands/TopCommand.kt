@@ -1,6 +1,7 @@
 package net.perfectdreams.dreammini.commands
 
 import net.perfectdreams.libs.acf.BaseCommand
+import net.perfectdreams.libs.acf.annotation.CatchUnknown
 import net.perfectdreams.libs.acf.annotation.CommandAlias
 import net.perfectdreams.libs.acf.annotation.CommandPermission
 import net.perfectdreams.libs.acf.annotation.Default
@@ -11,6 +12,7 @@ import org.bukkit.entity.Player
 @CommandPermission("dreammini.top")
 class TopCommand : BaseCommand() {
 	@Default
+	@CatchUnknown
 	fun onCommand(p0: CommandSender, p3: Array<String>): Boolean {
 		if (p0 is Player) {
 			p0.teleport(p0.location.world.getHighestBlockAt(p0.location).location)

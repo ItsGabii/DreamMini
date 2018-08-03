@@ -2,6 +2,7 @@ package net.perfectdreams.dreammini.commands
 
 import net.perfectdreams.dreamcore.utils.translateColorCodes
 import net.perfectdreams.libs.acf.BaseCommand
+import net.perfectdreams.libs.acf.annotation.CatchUnknown
 import net.perfectdreams.libs.acf.annotation.CommandAlias
 import net.perfectdreams.libs.acf.annotation.CommandPermission
 import net.perfectdreams.libs.acf.annotation.Default
@@ -14,6 +15,7 @@ import org.bukkit.entity.Player
 @CommandPermission("signedit.edit")
 class SignEditCommand : BaseCommand() {
 	@Default
+	@CatchUnknown
 	fun onCommand(p0: CommandSender, p3: Array<String>): Boolean {
 		if (p0 is Player) {
 			if (p3.isNotEmpty()) {
