@@ -1,19 +1,18 @@
 package net.perfectdreams.dreammini.commands
 
-import net.perfectdreams.dreamcore.utils.commands.AbstractCommand
-import net.perfectdreams.dreamcore.utils.withoutPermission
+import net.perfectdreams.libs.acf.BaseCommand
+import net.perfectdreams.libs.acf.annotation.CommandAlias
+import net.perfectdreams.libs.acf.annotation.CommandPermission
+import net.perfectdreams.libs.acf.annotation.Default
 import org.bukkit.Bukkit
-import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class SpeedCommand : AbstractCommand("speed") {
-	override fun onCommand(p0: CommandSender, p1: Command, p2: String, p3: Array<String>): Boolean {
-		if (!p0.hasPermission("dreammini.speed")) {
-			p0.sendMessage(withoutPermission)
-			return true
-		}
-
+@CommandAlias("speed|velocidade")
+@CommandPermission("dreammini.speed")
+class SpeedCommand : BaseCommand() {
+	@Default
+	fun onCommand(p0: CommandSender, p3: Array<String>): Boolean {
 		var user: Player? = null
 
 		if (p0 is Player) {

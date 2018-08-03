@@ -1,23 +1,20 @@
 package net.perfectdreams.dreammini.commands
 
-import net.perfectdreams.dreamcore.utils.commands.AbstractCommand
-import net.perfectdreams.dreamcore.utils.withoutPermission
+import net.perfectdreams.libs.acf.BaseCommand
+import net.perfectdreams.libs.acf.annotation.CommandAlias
+import net.perfectdreams.libs.acf.annotation.CommandPermission
+import net.perfectdreams.libs.acf.annotation.Default
 import org.bukkit.Bukkit
 import org.bukkit.World
-import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import java.lang.management.ManagementFactory
 import java.util.*
 
-
-
-class MemoryCommand : AbstractCommand("memory", listOf("mem", "uptime")) {
-	override fun onCommand(p0: CommandSender, p1: Command, p2: String, p3: Array<String>): Boolean {
-		if (!p0.hasPermission("dreammini.memory")) {
-			p0.sendMessage(withoutPermission)
-			return true
-		}
-
+@CommandAlias("memory|mem|uptime")
+@CommandPermission("dreammini.memory")
+class MemoryCommand : BaseCommand() {
+	@Default
+	fun onCommand(p0: CommandSender, p2: String, p3: Array<String>): Boolean {
 		val arg = p3.getOrNull(0)
 
 		if (arg == "worlds") {

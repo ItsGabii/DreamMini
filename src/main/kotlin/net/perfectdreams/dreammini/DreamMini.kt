@@ -28,6 +28,9 @@ class DreamMini : KotlinPlugin(), Listener {
 	override fun softEnable() {
 		super.softEnable()
 
+		registerCommand(SkullCommand())
+		registerCommand(FeedCommand())
+
 		registerEvents(this)
 		registerCommand(SignEditCommand())
 		registerCommand(SpeedCommand())
@@ -35,12 +38,10 @@ class DreamMini : KotlinPlugin(), Listener {
 		registerCommand(GameModeCommand())
 		registerCommand(HatCommand())
 		registerCommand(HealCommand())
-		registerCommand(FeedCommand())
 		registerCommand(TpAllCommand())
 		registerCommand(TopCommand())
 		registerCommand(SudoCommand())
 		registerCommand(MemoryCommand())
-		registerCommand(SkullCommand())
 		registerCommand(RenameCommand())
 		registerCommand(LoreCommand())
 	}
@@ -73,6 +74,7 @@ class DreamMini : KotlinPlugin(), Listener {
 			// Remover mensagem de entrada/saída
 			e.joinMessage = null
 			joined.add(e.player)
+			left.remove(e.player)
 
 			currentJoinSchedule?.cancel()
 
@@ -97,13 +99,13 @@ class DreamMini : KotlinPlugin(), Listener {
 			currentJoinSchedule = schedule
 
 			// Spawnar fireworks com cores aleatórias quando o player entrar no servidor
-			var r = DreamUtils.random.nextInt(0, 256)
-			var g = DreamUtils.random.nextInt(0, 256)
-			var b = DreamUtils.random.nextInt(0, 256)
+			val r = DreamUtils.random.nextInt(0, 256)
+			val g = DreamUtils.random.nextInt(0, 256)
+			val b = DreamUtils.random.nextInt(0, 256)
 
-			var fadeR = Math.max(0, r - 60)
-			var fadeG = Math.max(0, g - 60)
-			var fadeB = Math.max(0, b - 60)
+			val fadeR = Math.max(0, r - 60)
+			val fadeG = Math.max(0, g - 60)
+			val fadeB = Math.max(0, b - 60)
 
 			val fireworkEffect = FireworkEffect.builder()
 					.withTrail()
@@ -128,6 +130,7 @@ class DreamMini : KotlinPlugin(), Listener {
 			// Remover mensagem de entrada/saída
 			e.quitMessage = null
 			left.add(e.player)
+			joined.remove(e.player)
 
 			currentLeftSchedule?.cancel()
 
@@ -168,7 +171,7 @@ class DreamMini : KotlinPlugin(), Listener {
 
 						val location = e.itemDrop.location
 
-						if (location.block.type == Material.WATER || location.block.type == Material.STATIONARY_WATER) {
+						if (location.block.type == Material.WATER) {
 							if (WorldGuardUtils.isWithinRegion(location, "loja-sorte")) {
 								var rewarded = false
 								for (amount in 0 until e.itemDrop.itemStack.amount) {

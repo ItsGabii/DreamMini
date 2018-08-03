@@ -22,7 +22,11 @@
         </repository>
         <repository>
             <id>perfectdreams-repo</id>
-            <url>https://raw.githubusercontent.com/PerfectDreams/DreamMavenRepository/master/</url>
+            <url>https://repo.perfectdreams.net/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
         </repository>
     </repositories>
 	
@@ -30,7 +34,7 @@
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper</artifactId>
-            <version>1.12.2-R0.1-SNAPSHOT</version>
+            <version>1.13-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -39,12 +43,12 @@
             <version>${kotlin.version}</version>
             <scope>provided</scope>
         </dependency>
-		<dependency>
-			<groupId>com.github.PerfectDreams</groupId>
-			<artifactId>DreamCore</artifactId>
-			<version>-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
+        <dependency>
+            <groupId>net.perfectdreams.dreamcore</groupId>
+            <artifactId>DreamCore</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>

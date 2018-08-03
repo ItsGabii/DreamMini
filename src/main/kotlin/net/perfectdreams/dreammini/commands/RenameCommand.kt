@@ -1,20 +1,19 @@
 package net.perfectdreams.dreammini.commands
 
-import net.perfectdreams.dreamcore.utils.commands.AbstractCommand
 import net.perfectdreams.dreamcore.utils.translateColorCodes
-import net.perfectdreams.dreamcore.utils.withoutPermission
+import net.perfectdreams.libs.acf.BaseCommand
+import net.perfectdreams.libs.acf.annotation.CommandAlias
+import net.perfectdreams.libs.acf.annotation.CommandPermission
+import net.perfectdreams.libs.acf.annotation.Default
 import org.bukkit.Material
-import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class RenameCommand : AbstractCommand("rename", listOf("renomar")) {
-	override fun onCommand(p0: CommandSender, p1: Command, p2: String, p3: Array<String>): Boolean {
-		if (!p0.hasPermission("dreammini.rename")) {
-			p0.sendMessage(withoutPermission)
-			return true
-		}
-
+@CommandAlias("rename|renomear")
+@CommandPermission("dreammini.rename")
+class RenameCommand : BaseCommand() {
+	@Default
+	fun onCommand(p0: CommandSender, p3: Array<String>): Boolean {
 		val name = p3.joinToString(" ").translateColorCodes()
 
 		var user: Player? = null

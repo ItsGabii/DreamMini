@@ -1,19 +1,18 @@
 package net.perfectdreams.dreammini.commands
 
-import net.perfectdreams.dreamcore.utils.commands.AbstractCommand
-import net.perfectdreams.dreamcore.utils.withoutPermission
+import net.perfectdreams.libs.acf.BaseCommand
+import net.perfectdreams.libs.acf.annotation.CommandAlias
+import net.perfectdreams.libs.acf.annotation.CommandPermission
+import net.perfectdreams.libs.acf.annotation.Default
 import org.bukkit.Material
-import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class HatCommand : AbstractCommand("hat", listOf("head")) {
-	override fun onCommand(p0: CommandSender, p1: Command, p2: String, p3: Array<String>): Boolean {
-		if (!p0.hasPermission("dreammini.hat")) {
-			p0.sendMessage(withoutPermission)
-			return true
-		}
-
+@CommandAlias("hat|heade")
+@CommandPermission("dreammini.hat")
+class HatCommand : BaseCommand() {
+	@Default
+	fun onCommand(p0: CommandSender, p3: Array<String>): Boolean {
 		var user: Player? = null
 
 		if (p0 is Player) {

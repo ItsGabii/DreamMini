@@ -1,21 +1,20 @@
 package net.perfectdreams.dreammini.commands
 
-import net.perfectdreams.dreamcore.utils.commands.AbstractCommand
 import net.perfectdreams.dreamcore.utils.translateColorCodes
-import net.perfectdreams.dreamcore.utils.withoutPermission
+import net.perfectdreams.libs.acf.BaseCommand
+import net.perfectdreams.libs.acf.annotation.CommandAlias
+import net.perfectdreams.libs.acf.annotation.CommandPermission
+import net.perfectdreams.libs.acf.annotation.Default
 import org.bukkit.Material
 import org.bukkit.block.Sign
-import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class SignEditCommand : AbstractCommand("signedit") {
-	override fun onCommand(p0: CommandSender, p1: Command, p2: String, p3: Array<String>): Boolean {
-		if (!p0.hasPermission("signedit.edit")) {
-			p0.sendMessage(withoutPermission)
-			return true
-		}
-
+@CommandAlias("signedit")
+@CommandPermission("signedit.edit")
+class SignEditCommand : BaseCommand() {
+	@Default
+	fun onCommand(p0: CommandSender, p3: Array<String>): Boolean {
 		if (p0 is Player) {
 			if (p3.isNotEmpty()) {
 				val targetBlock = p0.getTargetBlock(null as Set<Material>?, 10)

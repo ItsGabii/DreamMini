@@ -1,21 +1,20 @@
 package net.perfectdreams.dreammini.commands
 
-import net.perfectdreams.dreamcore.utils.commands.AbstractCommand
-import net.perfectdreams.dreamcore.utils.withoutPermission
+import net.perfectdreams.libs.acf.BaseCommand
+import net.perfectdreams.libs.acf.annotation.CommandAlias
+import net.perfectdreams.libs.acf.annotation.CommandPermission
+import net.perfectdreams.libs.acf.annotation.Default
 import org.bukkit.Material
-import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 
-class SkullCommand : AbstractCommand("skull") {
-	override fun onCommand(p0: CommandSender, p1: Command, p2: String, p3: Array<String>): Boolean {
-		if (!p0.hasPermission("dreammini.skull")) {
-			p0.sendMessage(withoutPermission)
-			return true
-		}
-
+@CommandAlias("skull")
+@CommandPermission("dreammini.skull")
+class SkullCommand : BaseCommand() {
+	@Default
+	fun onCommand(p0: CommandSender, p3: Array<String>): Boolean {
 		val owner = p3.getOrNull(0)
 
 		if (owner == null) {
@@ -36,10 +35,10 @@ class SkullCommand : AbstractCommand("skull") {
 
 		val item = user.inventory.itemInMainHand
 		val type = item?.type
-		if (type == Material.SKULL_ITEM && item.durability == 3.toShort()) {
+		if (type == Material.PLAYER_HEAD && item.durability == 3.toShort()) {
 			// É necessário "clonar" o item, se não for "clonado", não será possível usar "meta.owner" caso a skull já tenha
 			// um owner anterior
-			val skull = ItemStack(Material.SKULL_ITEM, 1, 3)
+			val skull = ItemStack(Material.PLAYER_HEAD, 1)
 			skull.amount = item.amount
 			skull.addEnchantments(item.enchantments)
 			val meta = item.itemMeta as SkullMeta

@@ -1,20 +1,19 @@
 package net.perfectdreams.dreammini.commands
 
-import net.perfectdreams.dreamcore.utils.commands.AbstractCommand
-import net.perfectdreams.dreamcore.utils.withoutPermission
+import net.perfectdreams.libs.acf.BaseCommand
+import net.perfectdreams.libs.acf.annotation.CommandAlias
+import net.perfectdreams.libs.acf.annotation.CommandPermission
+import net.perfectdreams.libs.acf.annotation.Default
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
-import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class GameModeCommand : AbstractCommand("gamemode", listOf("gm")) {
-	override fun onCommand(p0: CommandSender, p1: Command, p2: String, p3: Array<String>): Boolean {
-		if (!p0.hasPermission("dreammini.fly")) {
-			p0.sendMessage(withoutPermission)
-			return true
-		}
-
+@CommandAlias("gm|gamemode")
+@CommandPermission("dreammini.fly")
+class GameModeCommand : BaseCommand() {
+	@Default
+	fun onCommand(p0: CommandSender, p3: Array<String>): Boolean {
 		var user: Player? = null
 
 		if (p0 is Player) {
