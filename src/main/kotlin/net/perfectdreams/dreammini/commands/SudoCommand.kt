@@ -5,7 +5,6 @@ import net.perfectdreams.libs.acf.annotation.CommandAlias
 import net.perfectdreams.libs.acf.annotation.CommandPermission
 import net.perfectdreams.libs.acf.annotation.Default
 import org.bukkit.Bukkit
-import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -13,7 +12,7 @@ import org.bukkit.entity.Player
 @CommandPermission("dreammini.sudo")
 class SudoCommand : BaseCommand() {
 	@Default
-	fun onCommand(p0: CommandSender, p1: Command, p2: String, p3: Array<String>): Boolean {
+	fun onCommand(p0: CommandSender, p3: Array<String>): Boolean {
 		var user: Player? = null
 
 		val playerName = p3.getOrNull(0)

@@ -14,7 +14,7 @@ import java.util.*
 @CommandPermission("dreammini.memory")
 class MemoryCommand : BaseCommand() {
 	@Default
-	fun onCommand(p0: CommandSender, p2: String, p3: Array<String>): Boolean {
+	fun onCommand(p0: CommandSender, p3: Array<String>): Boolean {
 		val arg = p3.getOrNull(0)
 
 		if (arg == "worlds") {
@@ -41,7 +41,7 @@ class MemoryCommand : BaseCommand() {
 		p0.sendMessage("§bMemória Máxima: §3${(Runtime.getRuntime().maxMemory() / 1024 / 1024)}MB")
 		p0.sendMessage("§bMemória Alocada: §3${(Runtime.getRuntime().totalMemory() / 1024 / 1024)}MB")
 		p0.sendMessage("§bMemória Livre: §3${(Runtime.getRuntime().freeMemory() / 1024 / 1024)}MB")
-		p0.sendMessage("§7Para ver mais informações, use §6/$p2 worlds")
+		p0.sendMessage("§7Para ver mais informações, use §6/memory worlds")
 		return true
 	}
 
