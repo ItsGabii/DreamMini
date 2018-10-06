@@ -44,6 +44,7 @@ class DreamMini : KotlinPlugin(), Listener {
 		registerCommand(MemoryCommand())
 		registerCommand(RenameCommand())
 		registerCommand(LoreCommand())
+		registerCommand(SpawnCommand())
 	}
 
 	override fun softDisable() {
