@@ -25,6 +25,11 @@ class TpaCommand(val m: DreamMini) : AbstractCommand("tpa", listOf("tpask", "cal
 			return
 		}
 
+		if (sender == requestee) {
+			sender.sendMessage("§cVocê não pode enviar um pedido de teletransporte para você mesmo, bobinho!")
+			return
+		}
+
 		val currentRequest = m.tpaManager.requests.firstOrNull { it.requester == sender }
 		if (currentRequest?.requestee == requestee) {
 			sender.sendMessage("§cVocê já enviou um pedido para §b${requestee.displayName}§3!")

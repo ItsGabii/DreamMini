@@ -5,7 +5,7 @@ import net.perfectdreams.dreamcore.utils.commands.annotation.Subcommand
 import net.perfectdreams.dreammini.DreamMini
 import org.bukkit.entity.Player
 
-class TpaNegarCommand(val m: DreamMini) : AbstractCommand("tpaceitar", listOf("tpaaceitar", "tpaccept", "tpaccept"), "dreammini.tpaceitar") {
+class TpaNegarCommand(val m: DreamMini) : AbstractCommand("tpnegar", listOf("tpanegar", "tpdeny", "tpadeny"), "dreammini.tpnegar") {
 	@Subcommand
 	fun root(sender: Player) {
 		val tpaRequest = m.tpaManager.requests.firstOrNull { it.requestee == sender }

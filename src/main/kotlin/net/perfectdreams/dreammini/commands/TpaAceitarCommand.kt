@@ -1,8 +1,10 @@
 package net.perfectdreams.dreammini.commands
 
+import net.perfectdreams.dreamcore.utils.LocationUtils
 import net.perfectdreams.dreamcore.utils.blacklistedTeleport
 import net.perfectdreams.dreamcore.utils.commands.AbstractCommand
 import net.perfectdreams.dreamcore.utils.commands.annotation.Subcommand
+import net.perfectdreams.dreamcore.utils.extensions.getSafeDestination
 import net.perfectdreams.dreammini.DreamMini
 import org.bukkit.entity.Player
 
@@ -23,7 +25,12 @@ class TpaAceitarCommand(val m: DreamMini) : AbstractCommand("tpaceitar", listOf(
 			return
 		}
 
-		requester.teleport(sender)
+		val location = try { sender.location.getSafeDestination() } catch (e: LocationUtils.HoleInFloorException) {
+			sender.sendMessage("§cVocê não está em um local seguro para aceitar o pedido!")
+			return
+		}
+
+		requester.teleport(location)
 		requester.sendMessage("§b${sender.displayName}§a aceitou o seu pedido de teletransporte!")
 		sender.sendMessage("§aVocê aceitou o pedido de teletransporte de §b${requester.displayName}§a!")
 
