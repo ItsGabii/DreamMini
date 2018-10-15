@@ -3,6 +3,7 @@ package net.perfectdreams.dreammini
 import com.okkero.skedule.CoroutineTask
 import com.okkero.skedule.schedule
 import net.perfectdreams.dreamcore.utils.*
+import net.perfectdreams.dreamcore.utils.extensions.hasStoredMetadataWithKey
 import net.perfectdreams.dreammini.commands.*
 import net.perfectdreams.dreammini.utils.TpaManager
 import org.bukkit.Color
@@ -16,6 +17,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.SignChangeEvent
+import org.bukkit.event.inventory.CraftItemEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
@@ -215,6 +217,14 @@ class DreamMini : KotlinPlugin(), Listener {
 					return@schedule
 				}
 			}
+		}
+	}
+
+	@EventHandler
+	fun onCraft(e: CraftItemEvent) {
+		for (item in e.inventory) {
+			if (item != null && item.hasStoredMetadataWithKey("disallowCrafting"))
+				e.isCancelled = true
 		}
 	}
 }
