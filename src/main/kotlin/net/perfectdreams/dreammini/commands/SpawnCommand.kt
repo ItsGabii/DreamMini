@@ -6,19 +6,22 @@ import net.perfectdreams.dreamcore.utils.commands.ExecutedCommandException
 import net.perfectdreams.dreamcore.utils.commands.annotation.ArgumentType
 import net.perfectdreams.dreamcore.utils.commands.annotation.InjectArgument
 import net.perfectdreams.dreamcore.utils.commands.annotation.Subcommand
+import net.perfectdreams.dreamcore.utils.commands.annotation.SubcommandPermission
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class SpawnCommand : AbstractCommand("spawn") {
 	@Subcommand
+	fun spawn(sender: Player) {
+		sender.teleport(DreamCore.dreamConfig.spawn)
+	}
+
+	@Subcommand
+	@SubcommandPermission("dreammini.spawn.move")
 	fun spawn(sender: CommandSender, @InjectArgument(ArgumentType.PLAYER) player: Player?) {
-		val target = if (player != null && sender.hasPermission("dreammini.spawn.move")) {
-			player
-		} else if (sender is Player) {
-			sender
-		} else {
+		if (player == null)
 			throw ExecutedCommandException("§cPlayer está offline!")
-		}
-		target.teleport(DreamCore.dreamConfig.spawn)
+
+		player.teleport(DreamCore.dreamConfig.spawn)
 	}
 }
