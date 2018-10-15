@@ -4,6 +4,7 @@ import com.okkero.skedule.CoroutineTask
 import com.okkero.skedule.schedule
 import net.perfectdreams.dreamcore.utils.*
 import net.perfectdreams.dreammini.commands.*
+import net.perfectdreams.dreammini.utils.TpaManager
 import org.bukkit.Color
 import org.bukkit.FireworkEffect
 import org.bukkit.Material
@@ -24,6 +25,7 @@ class DreamMini : KotlinPlugin(), Listener {
 	val left = mutableSetOf<Player>()
 	var currentJoinSchedule: CoroutineTask? = null
 	var currentLeftSchedule: CoroutineTask? = null
+	var tpaManager = TpaManager()
 
 	override fun softEnable() {
 		super.softEnable()
@@ -45,6 +47,10 @@ class DreamMini : KotlinPlugin(), Listener {
 		registerCommand(RenameCommand())
 		registerCommand(LoreCommand())
 		registerCommand(SpawnCommand())
+
+		registerCommand(TpaCommand(this))
+		registerCommand(TpaAceitarCommand(this))
+		registerCommand(TpaNegarCommand(this))
 	}
 
 	override fun softDisable() {
@@ -127,6 +133,8 @@ class DreamMini : KotlinPlugin(), Listener {
 
 	@EventHandler
 	fun onQuit(e: PlayerQuitEvent) {
+		tpaManager.requests = tpaManager.requests.asSequence().filter { it.requestee != e.player || it.requester != e.player }.toMutableList()
+
 		if (getConfig().getBoolean("fancy-quit", true)) {
 			// Remover mensagem de entrada/saída
 			e.quitMessage = null
