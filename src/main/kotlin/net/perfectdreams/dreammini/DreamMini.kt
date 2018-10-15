@@ -17,6 +17,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.SignChangeEvent
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.CraftItemEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerJoinEvent
@@ -225,6 +226,13 @@ class DreamMini : KotlinPlugin(), Listener {
 		for (item in e.inventory) {
 			if (item != null && item.hasStoredMetadataWithKey("disallowCrafting"))
 				e.isCancelled = true
+		}
+	}
+
+	@EventHandler
+	fun onDeath(e: PlayerDeathEvent) {
+		if (config.getBoolean("disable-death-messages", true)) {
+			e.deathMessage = null
 		}
 	}
 }
