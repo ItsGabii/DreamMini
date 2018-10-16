@@ -54,6 +54,7 @@ class DreamMini : KotlinPlugin(), Listener {
 		registerCommand(TpaCommand(this))
 		registerCommand(TpaAceitarCommand(this))
 		registerCommand(TpaNegarCommand(this))
+		registerCommand(BroadcastCommand(this))
 	}
 
 	override fun softDisable() {
@@ -77,7 +78,7 @@ class DreamMini : KotlinPlugin(), Listener {
 				e.player.setResourcePack(config.getString("resource-pack.link"), config.getString("resource-pack.hash"))
 			}
 		}
-		
+
 		if (e.player.hasPermission("dreammini.keepfly") && !e.player.isOnGround) { // Se o usuário deslogar enquanto está no ar, ative o fly
 			scheduler().schedule(this) {
 				waitFor(20)
