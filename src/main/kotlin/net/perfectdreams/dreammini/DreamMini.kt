@@ -5,6 +5,7 @@ import com.okkero.skedule.schedule
 import net.perfectdreams.dreamcore.utils.*
 import net.perfectdreams.dreamcore.utils.extensions.hasStoredMetadataWithKey
 import net.perfectdreams.dreammini.commands.*
+import net.perfectdreams.dreammini.utils.DiscordCommandRelayer
 import net.perfectdreams.dreammini.utils.TpaManager
 import org.bukkit.Color
 import org.bukkit.FireworkEffect
@@ -32,6 +33,10 @@ class DreamMini : KotlinPlugin(), Listener {
 
 	override fun softEnable() {
 		super.softEnable()
+
+		if (config.getBoolean("command-relay.enabled")) {
+			registerEvents(DiscordCommandRelayer(this))
+		}
 
 		registerCommand(SkullCommand())
 		registerCommand(FeedCommand())
