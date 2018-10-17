@@ -7,6 +7,7 @@ import net.perfectdreams.dreamcore.utils.extensions.hasStoredMetadataWithKey
 import net.perfectdreams.dreammini.commands.*
 import net.perfectdreams.dreammini.utils.DiscordCommandRelayer
 import net.perfectdreams.dreammini.utils.TpaManager
+import net.perfectdreams.dreammini.utils.UnknownCommandListener
 import org.bukkit.Color
 import org.bukkit.FireworkEffect
 import org.bukkit.Material
@@ -36,6 +37,9 @@ class DreamMini : KotlinPlugin(), Listener {
 
 		if (config.getBoolean("command-relay.enabled")) {
 			registerEvents(DiscordCommandRelayer(this))
+		}
+		if (config.getBoolean("fancy-unknown-command")) {
+			registerEvents(UnknownCommandListener(this))
 		}
 
 		registerCommand(SkullCommand())
