@@ -59,6 +59,7 @@ class DreamMini : KotlinPlugin(), Listener {
 		registerCommand(RenameCommand())
 		registerCommand(LoreCommand())
 		registerCommand(SpawnCommand())
+        registerCommand(LixeiraCommand())
 
 		registerCommand(TpaCommand(this))
 		registerCommand(TpaAceitarCommand(this))
