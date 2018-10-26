@@ -23,6 +23,7 @@ import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.CraftItemEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerKickEvent
 import org.bukkit.event.player.PlayerQuitEvent
 
 class DreamMini : KotlinPlugin(), Listener {
@@ -31,6 +32,8 @@ class DreamMini : KotlinPlugin(), Listener {
 	var currentJoinSchedule: CoroutineTask? = null
 	var currentLeftSchedule: CoroutineTask? = null
 	var tpaManager = TpaManager()
+
+    val vanished = mutableListOf<Player>()
 
 	override fun softEnable() {
 		super.softEnable()
@@ -61,6 +64,7 @@ class DreamMini : KotlinPlugin(), Listener {
 		registerCommand(SpawnCommand())
         registerCommand(LixeiraCommand())
 
+        registerCommand(VanishCommand(this))
 		registerCommand(TpaCommand(this))
 		registerCommand(TpaAceitarCommand(this))
 		registerCommand(TpaNegarCommand(this))
@@ -150,6 +154,12 @@ class DreamMini : KotlinPlugin(), Listener {
 
 			firework.fireworkMeta = fireworkMeta
 		}
+
+        for (player in server.onlinePlayers) {
+            if (vanished.contains(player)) {
+                e.player.hidePlayer(this, player)
+            }
+        }
 	}
 
 	@EventHandler
