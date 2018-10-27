@@ -224,13 +224,6 @@ class DreamMini : KotlinPlugin(), Listener {
 								for (amount in 0 until e.itemDrop.itemStack.amount) {
 									var chance = DreamUtils.random.nextInt(0, 101)
 
-									if (type == Material.GOLD_INGOT) {
-										chance = Math.min(chance * 2, 100)
-									}
-									if (type == Material.GOLD_BLOCK) {
-										chance = Math.min(chance * 4, 100)
-									}
-
 									// TODO: Prêmios
 									if (chance == 100) {
 										player.balance += 1750
