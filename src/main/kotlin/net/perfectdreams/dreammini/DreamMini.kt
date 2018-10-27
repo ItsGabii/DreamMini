@@ -23,20 +23,26 @@ import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.CraftItemEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerKickEvent
 import org.bukkit.event.player.PlayerQuitEvent
 
 class DreamMini : KotlinPlugin(), Listener {
+	companion object {
+		lateinit var INSTANCE: DreamMini
+	}
+
 	val joined = mutableSetOf<Player>()
 	val left = mutableSetOf<Player>()
 	var currentJoinSchedule: CoroutineTask? = null
 	var currentLeftSchedule: CoroutineTask? = null
 	var tpaManager = TpaManager()
 
-    val vanished = mutableListOf<Player>()
+    val vanished = mutableSetOf<Player>()
+	val queroTrabalhar = mutableSetOf<Player>()
 
 	override fun softEnable() {
 		super.softEnable()
+
+		INSTANCE = this
 
 		if (config.getBoolean("command-relay.enabled")) {
 			registerEvents(DiscordCommandRelayer(this))
@@ -69,6 +75,7 @@ class DreamMini : KotlinPlugin(), Listener {
 		registerCommand(TpaAceitarCommand(this))
 		registerCommand(TpaNegarCommand(this))
 		registerCommand(BroadcastCommand(this))
+		registerCommand(QueroTrabalharCommand(this))
 	}
 
 	override fun softDisable() {
