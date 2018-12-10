@@ -5,6 +5,7 @@ import com.okkero.skedule.schedule
 import net.perfectdreams.dreamcore.utils.*
 import net.perfectdreams.dreamcore.utils.extensions.hasStoredMetadataWithKey
 import net.perfectdreams.dreammini.commands.*
+import net.perfectdreams.dreammini.utils.AtendenteListener
 import net.perfectdreams.dreammini.utils.DiscordCommandRelayer
 import net.perfectdreams.dreammini.utils.TpaManager
 import net.perfectdreams.dreammini.utils.UnknownCommandListener
@@ -50,6 +51,12 @@ class DreamMini : KotlinPlugin(), Listener {
 		if (config.getBoolean("fancy-unknown-command")) {
 			registerEvents(UnknownCommandListener(this))
 		}
+		if (config.getBoolean("atendente-da-loja")) {
+			val listener = AtendenteListener(this)
+			registerEvents(listener)
+			registerCommand(AtendenteListener.AtendenteMenuCommand(listener))
+			listener.loadAtendenteMenu()
+		}
 
 		registerCommand(SkullCommand())
 		registerCommand(FeedCommand())
@@ -76,6 +83,7 @@ class DreamMini : KotlinPlugin(), Listener {
 		registerCommand(TpaNegarCommand(this))
 		registerCommand(BroadcastCommand(this))
 		registerCommand(QueroTrabalharCommand(this))
+		registerCommand(FacebookCommand(this))
 	}
 
 	override fun softDisable() {
