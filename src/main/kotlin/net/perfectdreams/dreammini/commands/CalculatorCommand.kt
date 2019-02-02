@@ -2,6 +2,7 @@ package net.perfectdreams.dreammini.commands
 
 import net.perfectdreams.commands.annotation.Subcommand
 import net.perfectdreams.commands.bukkit.SparklyCommand
+import net.perfectdreams.dreamcore.utils.generateCommandInfo
 import net.perfectdreams.dreammini.DreamMini
 import org.bukkit.command.CommandSender
 
@@ -9,13 +10,22 @@ class CalculatorCommand(val m: DreamMini) : SparklyCommand(arrayOf("calc", "calc
 
     @Subcommand
     fun root(sender: CommandSender, expression: Array<String>){
-        try {
-            val mathResult = evalMath(expression.joinToString(" "))
+        if(expression.isNotEmpty()) {
+            try {
+                val mathResult = evalMath(expression.joinToString(" "))
 
-            sender.sendMessage("§6§lResultado: §c§l$mathResult")
+                sender.sendMessage("§6§lResultado: §c§l$mathResult")
 
-        }catch (e: Exception){
-            sender.sendMessage("§c§lIsto não é uma expressão aritmética válida!")
+            } catch (e: Exception) {
+                sender.sendMessage("§c§lIsto não é uma expressão aritmética válida!")
+            }
+        }else{
+            sender.sendMessage(generateCommandInfo(
+                    "calc",
+                    mapOf(
+                            "Conta" to "Conta a ser calculada."
+                    )
+            ))
         }
     }
 
