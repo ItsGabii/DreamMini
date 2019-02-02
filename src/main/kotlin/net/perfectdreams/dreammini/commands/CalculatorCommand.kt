@@ -8,9 +8,9 @@ import org.bukkit.command.CommandSender
 class CalculatorCommand(val m: DreamMini) : SparklyCommand(arrayOf("calc", "calculadora")){
 
     @Subcommand
-    fun root(sender: CommandSender, expression: String){
+    fun root(sender: CommandSender, expression: Array<String>){
         try {
-            val mathResult = evalMath(expression)
+            val mathResult = evalMath(expression.joinToString(" "))
 
             sender.sendMessage("§6§lResultado: §c§l$mathResult")
 
