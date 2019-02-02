@@ -1,52 +1,51 @@
 package net.perfectdreams.dreammini.commands
 
+import net.perfectdreams.commands.annotation.Subcommand
+import net.perfectdreams.commands.bukkit.SparklyCommand
+import net.perfectdreams.dreamcore.utils.generateCommandInfo
 import net.perfectdreams.dreamcore.utils.translateColorCodes
-import net.perfectdreams.libs.acf.BaseCommand
-import net.perfectdreams.libs.acf.annotation.CatchUnknown
-import net.perfectdreams.libs.acf.annotation.CommandAlias
-import net.perfectdreams.libs.acf.annotation.CommandPermission
-import net.perfectdreams.libs.acf.annotation.Default
+import net.perfectdreams.dreammini.DreamMini
 import org.bukkit.Material
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-@CommandAlias("rename|renomear")
-@CommandPermission("dreammini.rename")
-class RenameCommand : BaseCommand() {
-	@Default
-	@CatchUnknown
-	fun onCommand(p0: CommandSender, p3: Array<String>): Boolean {
-		val name = p3.joinToString(" ").translateColorCodes()
+class RenameCommand(val m: DreamMini) : SparklyCommand(arrayOf("rename", "renomear")){
 
-		var user: Player? = null
+	@Subcommand
+	fun root(sender: Player){
+		sender.sendMessage(generateCommandInfo("rename <newname>"))
+	}
 
-		if (p0 is Player) {
-			user = p0
-		}
+	@Subcommand
+	fun rename(sender: Player, itemName: String){
+		val name = itemName.translateColorCodes()
 
-		if (user == null) {
-			p0.sendMessage("§cUsuário inválido!")
-			return true
-		}
-
-		val item = user.inventory.itemInMainHand
+		val item = sender.inventory.itemInMainHand
 		val type = item?.type
+
+		if(type != Material.AIR){
+			val meta = item.itemMeta
+
+			meta.displayName = name
+			item.itemMeta = meta
+
+			sender.sendMessage("§aAgora o nome do item é §r${name}§a!")
+		}else {
+			sender.sendMessage("§cSegure um item na sua mão antes de usar!")
+		}
+	}
+
+	@Subcommand(["resetname"])
+	fun reset(sender: Player) {
+		val item = sender.inventory.itemInMainHand
+		val type = item?.type
+
 		if (type != Material.AIR) {
 			val meta = item.itemMeta
-			if (name.isNotEmpty()) {
-				meta.displayName = name
-				item.itemMeta = meta
 
-				user.sendMessage("§aAgora o nome do item é §r${name}§a!")
-			} else {
-				meta.displayName = null
-				item.itemMeta = meta
+			meta.displayName = null
+			item.itemMeta = meta
 
-				user.sendMessage("§aNome do item removido!")
-			}
-		} else {
-			user.sendMessage("§cSegure um item na sua mão antes de usar!")
+			sender.sendMessage("§aNome do item removido!")
 		}
-		return true
 	}
 }

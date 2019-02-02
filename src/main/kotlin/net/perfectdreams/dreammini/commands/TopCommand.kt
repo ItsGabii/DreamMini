@@ -1,25 +1,15 @@
 package net.perfectdreams.dreammini.commands
 
-import net.perfectdreams.libs.acf.BaseCommand
-import net.perfectdreams.libs.acf.annotation.CatchUnknown
-import net.perfectdreams.libs.acf.annotation.CommandAlias
-import net.perfectdreams.libs.acf.annotation.CommandPermission
-import net.perfectdreams.libs.acf.annotation.Default
-import org.bukkit.command.CommandSender
+import net.perfectdreams.commands.annotation.Subcommand
+import net.perfectdreams.commands.bukkit.SparklyCommand
+import net.perfectdreams.dreammini.DreamMini
 import org.bukkit.entity.Player
 
-@CommandAlias("top")
-@CommandPermission("dreammini.top")
-class TopCommand : BaseCommand() {
-	@Default
-	@CatchUnknown
-	fun onCommand(p0: CommandSender, p3: Array<String>): Boolean {
-		if (p0 is Player) {
-			p0.teleport(p0.location.world.getHighestBlockAt(p0.location).location)
-			p0.sendMessage("§aVocê chegou ao topo!")
-		} else {
-			p0.sendMessage("§cUsuário inválido!")
-		}
-		return true
+class TopCommand(val m: DreamMini) : SparklyCommand(arrayOf("top", "topo", "subir"), permission = "dreammini.top"){
+
+	@Subcommand
+	fun root(sender: Player){
+		sender.teleport(sender.location.world.getHighestBlockAt(sender.location).location)
+		sender.sendMessage("§b彡ﾟ◉ω◉  )つー☆* §aVocê se teleportou para o topo §b*☆ーつ(  ◉ω◉ﾟ彡")
 	}
 }

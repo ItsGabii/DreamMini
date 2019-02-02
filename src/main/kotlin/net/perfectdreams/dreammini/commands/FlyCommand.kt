@@ -1,50 +1,34 @@
 package net.perfectdreams.dreammini.commands
 
-import net.perfectdreams.libs.acf.BaseCommand
-import net.perfectdreams.libs.acf.annotation.CatchUnknown
-import net.perfectdreams.libs.acf.annotation.CommandAlias
-import net.perfectdreams.libs.acf.annotation.CommandPermission
-import net.perfectdreams.libs.acf.annotation.Default
+import net.perfectdreams.commands.annotation.Subcommand
+import net.perfectdreams.commands.bukkit.SparklyCommand
+import net.perfectdreams.dreammini.DreamMini
 import org.bukkit.Bukkit
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-@CommandAlias("fly|voar")
-@CommandPermission("dreammini.fly")
-class FlyCommand : BaseCommand() {
-	@Default
-	@CatchUnknown
-	fun onCommand(p0: CommandSender, p3: Array<String>): Boolean {
-		var user: Player? = null
+class FlyCommand(val m: DreamMini) : SparklyCommand(arrayOf("fly", "voar"), permission = "dreammini.fly"){
 
-		if (p0 is Player) {
-			user = p0
-		}
+	@Subcommand
+	fun root(sender: Player, playerName: String? = null){
+		var player = sender
 
-		val playerName = p3.getOrNull(0)
-
-		if (playerName != null) {
-			user = Bukkit.getPlayer(playerName)
-
-			if (user == null) {
-				p0.sendMessage("§b$playerName §cnão existe ou está offline!")
-				return true
+		if(playerName != null){
+			if(Bukkit.getPlayer(playerName) == null){
+				sender.sendMessage("§c$playerName não existe ou está offline!")
+				return
+			}else{
+				player = Bukkit.getPlayer(playerName)
 			}
 		}
 
-		if (user == null) {
-			p0.sendMessage("§cUsuário inválido!")
-			return true
-		}
+		if(!player.allowFlight){
+			player.allowFlight = true
+			player.isFlying = true
 
-		if (!user.allowFlight) {
-			user.allowFlight = true
-			user.isFlying = true
-			p0.sendMessage("§aModo de vôo ativado para §b${user.name}§a, woosh!")
-		} else {
-			user.allowFlight = false
-			p0.sendMessage("§aModo de vôo desativado para §b${user.name}")
+			sender.sendMessage("§aModo de vôo ativado para §b${player.name}§a, (∩*´∀` )⊃━☆ﾟ.*･｡ﾟ whoosh!")
+		}else{
+			player.allowFlight = false
+			sender.sendMessage("§aModo de vôo desativado para §b${player.name}§a, ( ∩╹□╹∩ ) whoopsie!")
 		}
-		return true
 	}
 }

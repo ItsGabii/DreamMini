@@ -1,14 +1,15 @@
 package net.perfectdreams.dreammini.commands
 
+import net.perfectdreams.commands.bukkit.SparklyCommand
 import net.perfectdreams.dreamcore.utils.LocationUtils
 import net.perfectdreams.dreamcore.utils.blacklistedTeleport
-import net.perfectdreams.dreamcore.utils.commands.AbstractCommand
-import net.perfectdreams.dreamcore.utils.commands.annotation.Subcommand
+import net.perfectdreams.commands.annotation.Subcommand
 import net.perfectdreams.dreamcore.utils.extensions.getSafeDestination
 import net.perfectdreams.dreammini.DreamMini
 import org.bukkit.entity.Player
 
-class TpaAceitarCommand(val m: DreamMini) : AbstractCommand("tpaceitar", listOf("tpaaceitar", "tpaccept", "tpaccept"), "dreammini.tpaceitar") {
+class TpaAceitarCommand(val m: DreamMini) : SparklyCommand(arrayOf("tpaceitar", "tpaccept", "tpaccept"), permission = "dreammini.tpaceitar") {
+
 	@Subcommand
 	fun root(sender: Player) {
 		val tpaRequest = m.tpaManager.requests.firstOrNull { it.requestee == sender }

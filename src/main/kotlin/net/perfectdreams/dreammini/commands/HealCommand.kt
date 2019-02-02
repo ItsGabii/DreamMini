@@ -1,44 +1,27 @@
 package net.perfectdreams.dreammini.commands
 
-import net.perfectdreams.libs.acf.BaseCommand
-import net.perfectdreams.libs.acf.annotation.CatchUnknown
-import net.perfectdreams.libs.acf.annotation.CommandAlias
-import net.perfectdreams.libs.acf.annotation.CommandPermission
-import net.perfectdreams.libs.acf.annotation.Default
+import net.perfectdreams.commands.annotation.Subcommand
+import net.perfectdreams.commands.bukkit.SparklyCommand
+import net.perfectdreams.dreammini.DreamMini
 import org.bukkit.Bukkit
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-@CommandAlias("heal")
-@CommandPermission("dreammini.heal")
-class HealCommand : BaseCommand() {
-	@Default
-	@CatchUnknown
-	fun onCommand(p0: CommandSender, p3: Array<String>): Boolean {
-		var user: Player? = null
+class HealCommand(val m: DreamMini) : SparklyCommand(arrayOf("heal", "vida", "restaurarvida"), permission = "dreammini.heal"){
 
-		if (p0 is Player) {
-			user = p0
-		}
+	@Subcommand
+	fun root(sender: Player, playerName: String? = null){
+		var player = sender
 
-		val playerName = p3.getOrNull(0)
-
-		if (playerName != null) {
-			user = Bukkit.getPlayer(playerName)
-
-			if (user == null) {
-				p0.sendMessage("§b$playerName §cnão existe ou está offline!")
-				return true
+		if(playerName != null){
+			if(Bukkit.getPlayer(playerName) == null){
+				sender.sendMessage("§b$playerName §cnão existe ou está offline!")
+				return
+			}else{
+				player = Bukkit.getPlayer(playerName)
 			}
 		}
 
-		if (user == null) {
-			p0.sendMessage("§cUsuário inválido!")
-			return true
-		}
-
-		user.health = 20.0
-		p0.sendMessage("§b${user.name}§a teve a vida restaurada!")
-		return true
+		player.health = 20.0
+		sender.sendMessage("§b${player.name}§a teve a vida restaurada!")
 	}
 }

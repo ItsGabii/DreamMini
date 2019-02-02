@@ -1,48 +1,29 @@
 package net.perfectdreams.dreammini.commands
 
-import net.perfectdreams.libs.acf.BaseCommand
-import net.perfectdreams.libs.acf.annotation.CatchUnknown
-import net.perfectdreams.libs.acf.annotation.CommandAlias
-import net.perfectdreams.libs.acf.annotation.CommandPermission
-import net.perfectdreams.libs.acf.annotation.Default
+import net.perfectdreams.commands.annotation.Subcommand
+import net.perfectdreams.commands.bukkit.SparklyCommand
+import net.perfectdreams.dreammini.DreamMini
 import org.bukkit.Bukkit
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-@CommandAlias("tpall")
-@CommandPermission("dreammini.tpall")
-class TpAllCommand : BaseCommand() {
-	@Default
-	@CatchUnknown
-	fun onCommand(p0: CommandSender, p3: Array<String>): Boolean {
-		var user: Player? = null
+class TpAllCommand(val m: DreamMini) : SparklyCommand(arrayOf("tpall"), permission = "dreammini.tpall"){
 
-		if (p0 is Player) {
-			user = p0
-		}
+	@Subcommand
+	fun root(sender: Player, playerName: String? = null){
+		var player = sender
 
-		val playerName = p3.getOrNull(0)
-
-		if (playerName != null) {
-			user = Bukkit.getPlayer(playerName)
-
-			if (user == null) {
-				p0.sendMessage("§b$playerName §cnão existe ou está offline!")
-				return true
+		if(playerName != null){
+			if(Bukkit.getPlayer(playerName) == null){
+				sender.sendMessage("§b$playerName §cnão existe ou está offline!")
+				return
+			}else{
+				player = Bukkit.getPlayer(playerName)
 			}
 		}
 
-		if (user == null) {
-			p0.sendMessage("§cUsuário inválido!")
-			return true
-		}
+		val player1 = player
+		Bukkit.getOnlinePlayers().forEach{ it.teleport(player1.location)}
 
-		val _user = user
-		Bukkit.getOnlinePlayers().forEach {
-			it.teleport(_user.location)
-		}
-
-		p0.sendMessage("§aTodos os players vieram até §b${user.name}§a!")
-		return true
+		sender.sendMessage("§aTodos os players foram teletransportados para §b${player.name}§a!")
 	}
 }

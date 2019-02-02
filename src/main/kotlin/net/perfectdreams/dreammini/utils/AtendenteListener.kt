@@ -1,10 +1,10 @@
 package net.perfectdreams.dreammini.utils
 
+import net.perfectdreams.commands.annotation.Subcommand
+import net.perfectdreams.commands.bukkit.SparklyCommand
 import net.perfectdreams.dreamcore.scriptmanager.DreamScriptManager
 import net.perfectdreams.dreamcore.scriptmanager.Imports
 import net.perfectdreams.dreamcore.utils.DreamMenu
-import net.perfectdreams.dreamcore.utils.commands.AbstractCommand
-import net.perfectdreams.dreamcore.utils.commands.annotation.Subcommand
 import net.perfectdreams.dreamcore.utils.extensions.isWithinRegion
 import net.perfectdreams.dreammini.DreamMini
 import org.bukkit.command.CommandSender
@@ -38,7 +38,8 @@ class AtendenteListener(val m: DreamMini) : Listener {
 		}
 	}
 
-	class AtendenteMenuCommand(val m: AtendenteListener) : AbstractCommand("atendentemenu", permission = "dreammini.atendente") {
+	class AtendenteMenuCommand(val m: AtendenteListener) : SparklyCommand(arrayOf("atendentemenu"), permission = "dreammini.atendente") {
+
 		@Subcommand
 		fun root(sender: CommandSender) {
 			sender.sendMessage("§aRecarregando...")

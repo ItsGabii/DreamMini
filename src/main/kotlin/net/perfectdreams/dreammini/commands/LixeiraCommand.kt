@@ -1,11 +1,12 @@
 package net.perfectdreams.dreammini.commands
 
-import net.perfectdreams.dreamcore.utils.commands.AbstractCommand
-import net.perfectdreams.dreamcore.utils.commands.annotation.Subcommand
+import net.perfectdreams.commands.bukkit.SparklyCommand
+import net.perfectdreams.commands.annotation.Subcommand
+import net.perfectdreams.dreammini.DreamMini
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
-class LixeiraCommand : AbstractCommand("lixeira", permission = "dreammini.lixeira", aliases = listOf("garbage", "lixo")) {
+class LixeiraCommand(val m: DreamMini) : SparklyCommand(arrayOf("lixeira", "garbage", "lixo"), permission = "dreammini.lixeira") {
 
     @Subcommand
     fun lixeira(sender: Player) {

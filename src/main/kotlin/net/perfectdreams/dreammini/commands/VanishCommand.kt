@@ -1,11 +1,11 @@
 package net.perfectdreams.dreammini.commands
 
-import net.perfectdreams.dreamcore.utils.commands.AbstractCommand
-import net.perfectdreams.dreamcore.utils.commands.annotation.Subcommand
+import net.perfectdreams.commands.annotation.Subcommand
+import net.perfectdreams.commands.bukkit.SparklyCommand
 import net.perfectdreams.dreammini.DreamMini
 import org.bukkit.entity.Player
 
-class VanishCommand(val m: DreamMini) : AbstractCommand("vanish", permission = "dreammini.vanish") {
+class VanishCommand(val m: DreamMini) : SparklyCommand(arrayOf("vanish"), permission = "dreammini.vanish") {
 
     @Subcommand
     fun vanish(sender: Player) {

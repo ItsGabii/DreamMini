@@ -1,11 +1,12 @@
 package net.perfectdreams.dreammini.commands
 
-import net.perfectdreams.dreamcore.utils.commands.AbstractCommand
-import net.perfectdreams.dreamcore.utils.commands.annotation.Subcommand
+import net.perfectdreams.commands.annotation.Subcommand
+import net.perfectdreams.commands.bukkit.SparklyCommand
 import net.perfectdreams.dreammini.DreamMini
 import org.bukkit.entity.Player
 
-class TpaNegarCommand(val m: DreamMini) : AbstractCommand("tpnegar", listOf("tpanegar", "tpdeny", "tpadeny"), "dreammini.tpnegar") {
+class TpaNegarCommand(val m: DreamMini) : SparklyCommand(arrayOf("tpnegar", "tpanegar", "tpdeny", "tpadeny"), permission = "dreammini.tpnegar") {
+
 	@Subcommand
 	fun root(sender: Player) {
 		val tpaRequest = m.tpaManager.requests.firstOrNull { it.requestee == sender }

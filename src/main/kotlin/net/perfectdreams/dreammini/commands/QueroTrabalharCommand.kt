@@ -1,11 +1,12 @@
 package net.perfectdreams.dreammini.commands
 
-import net.perfectdreams.dreamcore.utils.commands.AbstractCommand
-import net.perfectdreams.dreamcore.utils.commands.annotation.Subcommand
+import net.perfectdreams.commands.bukkit.SparklyCommand
+import net.perfectdreams.commands.annotation.Subcommand
 import net.perfectdreams.dreammini.DreamMini
 import org.bukkit.entity.Player
 
-class QueroTrabalharCommand(val m: DreamMini) : AbstractCommand("querotrabalhar", permission = "dreammini.querotrabalhar") {
+class QueroTrabalharCommand(val m: DreamMini) : SparklyCommand(arrayOf("querotrabalhar"), permission = "dreammini.querotrabalhar") {
+
     @Subcommand
     fun queroTrabalhar(sender: Player) {
         if (m.queroTrabalhar.contains(sender)) {

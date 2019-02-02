@@ -1,43 +1,40 @@
 package net.perfectdreams.dreammini.commands
 
-import net.perfectdreams.libs.acf.BaseCommand
-import net.perfectdreams.libs.acf.annotation.CatchUnknown
-import net.perfectdreams.libs.acf.annotation.CommandAlias
-import net.perfectdreams.libs.acf.annotation.CommandPermission
-import net.perfectdreams.libs.acf.annotation.Default
+import net.perfectdreams.commands.annotation.Subcommand
+import net.perfectdreams.commands.bukkit.SparklyCommand
+import net.perfectdreams.dreammini.DreamMini
+import org.bukkit.Bukkit
 import org.bukkit.Material
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-@CommandAlias("hat|head")
-@CommandPermission("dreammini.hat")
-class HatCommand : BaseCommand() {
-	@Default
-	@CatchUnknown
-	fun onCommand(p0: CommandSender, p3: Array<String>): Boolean {
-		var user: Player? = null
+class HatCommand(val m: DreamMini) : SparklyCommand(arrayOf("hat", "capacete", "chapéu"), permission = "dreammini.hat"){
 
-		if (p0 is Player) {
-			user = p0
-		}
+	@Subcommand
+	fun root(sender: Player, playerName: String? = null){
+		var player = sender
 
-		if (user == null) {
-			p0.sendMessage("§cUsuário inválido!")
-			return true
-		}
-
-		val item = user.inventory.itemInMainHand
-		if (item != null) {
-			val type = item.type
-			user.inventory.helmet = item
-			if (type != Material.AIR) {
-				user.sendMessage("§aAdorei esse seu novo look amig@!")
-			} else {
-				user.sendMessage("§a#sdds do seu capacete")
+		if(playerName != null){
+			if(Bukkit.getPlayer(playerName) == null){
+				sender.sendMessage("§b$playerName §cnão existe ou está offline!")
+				return
+			}else{
+				player = Bukkit.getPlayer(playerName)
 			}
-		} else {
-			user.sendMessage("§cSegure um item/bloco na sua mão antes de usar!")
 		}
-		return true
+
+		val item = player.inventory.itemInMainHand
+
+		if(item != null){
+			val type = item.type
+			player.inventory.helmet = item
+
+			if(type != Material.AIR){
+				sender.sendMessage("§a(ﾉ ≧ ∀ ≦)ﾉ Adorei seu novo look!")
+			}else{
+				sender.sendMessage("§aVocê consegue novamente sentir o vento soprar sua cabeça! ヽ(･ˇ ∀ˇ･ゞ)")
+			}
+		}else{
+			sender.sendMessage("§cSegure um item/bloco na sua mão antes de usar!")
+		}
 	}
 }

@@ -1,70 +1,57 @@
 package net.perfectdreams.dreammini.commands
 
-import net.perfectdreams.libs.acf.BaseCommand
-import net.perfectdreams.libs.acf.annotation.CatchUnknown
-import net.perfectdreams.libs.acf.annotation.CommandAlias
-import net.perfectdreams.libs.acf.annotation.CommandPermission
-import net.perfectdreams.libs.acf.annotation.Default
+import net.perfectdreams.commands.annotation.Subcommand
+import net.perfectdreams.commands.bukkit.SparklyCommand
+import net.perfectdreams.dreamcore.utils.generateCommandInfo
+import net.perfectdreams.dreammini.DreamMini
 import org.bukkit.Bukkit
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-@CommandAlias("speed|velocidade")
-@CommandPermission("dreammini.speed")
-class SpeedCommand : BaseCommand() {
-	@Default
-	@CatchUnknown
-	fun onCommand(p0: CommandSender, p3: Array<String>): Boolean {
-		var user: Player? = null
+class SpeedCommand(val m: DreamMini) : SparklyCommand(arrayOf("speed", "velocidade"), permission = "dreammini.speed") {
 
-		if (p0 is Player) {
-			user = p0
-		}
+	@Subcommand
+	fun root(sender: Player){
+		sender.sendMessage(generateCommandInfo("speed <velocidade> ?<player> ?<type[fly|walk]>"))
+	}
 
-		val userSpeed = p3.getOrNull(0)?.toFloatOrNull()
-		val playerName = p3.getOrNull(1)
+	@Subcommand
+	fun speed(sender: Player, velocity: String, playerName: String? = null, setType: String? = null) {
+		var user = sender
 
-		if (playerName != null) {
-			user = Bukkit.getPlayer(playerName)
+		val speedLevel = velocity.toFloatOrNull()
 
-			if (user == null) {
-				p0.sendMessage("§b$playerName §cnão existe ou está offline!")
-				return true
+		var type = setType
+
+		if(playerName != null){
+
+			if(Bukkit.getPlayer(playerName) == null){
+				sender.sendMessage("§c$playerName está offline ou não existe!")
+				return
+			}else{
+				user = Bukkit.getPlayer(playerName)
 			}
 		}
 
-		if (user == null) {
-			p0.sendMessage("§cUsuário inválido!")
-			return true
+		if(type == null){
+			type = if(user.isFlying) { "fly" } else { "walk" }
 		}
-		if (userSpeed != null) {
-			val speed = userSpeed / 5
-			if (speed !in 0.0..1.0) {
-				p0.sendMessage("§cVelocidade precisa estar entre 0 e 5!")
-				return true
-			}
 
-			var type = p3.getOrNull(2)
+		if(speedLevel != null) {
 
-			if (type == null) {
-				type = if (user.isOnGround) {
-					"walk"
+			val speed = speedLevel / 5
+
+			if (speed in 0.1..1.0) {
+
+				if (type == "fly") {
+					user.flySpeed = speed
+					sender.sendMessage("§aVelocidade de vôo de §b${user.name}§a foi alterada para §9$speedLevel§a!")
 				} else {
-					"fly"
+					user.walkSpeed = speed
+					sender.sendMessage("§aVelocidade no chão de §b${user.name}§a foi alterada para §9$speedLevel§a!")
 				}
-			}
-
-			if (type == "walk") {
-				user.walkSpeed = speed
-				p0.sendMessage("§aVelocidade no chão de §b${user.name}§a foi alterada para §9${userSpeed}§a!")
 			} else {
-				user.flySpeed = speed
-				p0.sendMessage("§aVelocidade de vôo de §b${user.name}§a foi alterada para §9${userSpeed}§a!")
+				sender.sendMessage("§cVelocidade precisa estar entre 0 e 5!")
 			}
-			return true
 		}
-
-		p0.sendMessage("§e/speed velocidade player walk/fly")
-		return true
 	}
 }

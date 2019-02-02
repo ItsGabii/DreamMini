@@ -1,67 +1,50 @@
 package net.perfectdreams.dreammini.commands
 
-import net.perfectdreams.libs.acf.BaseCommand
-import net.perfectdreams.libs.acf.annotation.CatchUnknown
-import net.perfectdreams.libs.acf.annotation.CommandAlias
-import net.perfectdreams.libs.acf.annotation.CommandPermission
-import net.perfectdreams.libs.acf.annotation.Default
+import net.perfectdreams.commands.annotation.Subcommand
+import net.perfectdreams.commands.bukkit.SparklyCommand
+import net.perfectdreams.dreamcore.utils.generateCommandInfo
+import net.perfectdreams.dreammini.DreamMini
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-@CommandAlias("gm|gamemode")
-@CommandPermission("dreammini.fly")
-class GameModeCommand : BaseCommand() {
-	@Default
-	@CatchUnknown
-	fun onCommand(p0: CommandSender, p3: Array<String>): Boolean {
-		var user: Player? = null
+class GameModeCommand(val m: DreamMini) : SparklyCommand(arrayOf("gm", "gamemode"), permission = "dreammini.fly"){
 
-		if (p0 is Player) {
-			user = p0
-		}
+	@Subcommand
+	fun root(sender: Player){
+		sender.sendMessage(generateCommandInfo("gm <0/1/2/3 | survival/creative/adventure/spectator>"))
+	}
 
-		val gameModeArg = p3.getOrNull(0)
+	@Subcommand
+	fun gamemode(sender: Player, gameMode: String, playerName: String? = null){
+		var player = sender
 
-		if (gameModeArg == null) {
-			p0.sendMessage("§e/gamemode 0/1/2/3/survival/creative/adventure/spectator")
-			return true
-		}
+		val gm: String?
 
-		val playerName = p3.getOrNull(1)
-
-		if (playerName != null) {
-			user = Bukkit.getPlayer(playerName)
-
-			if (user == null) {
-				p0.sendMessage("§b$playerName §cnão existe ou está offline!")
-				return true
+		if(playerName != null){
+			if(Bukkit.getPlayer(playerName) == null){
+				sender.sendMessage("§b$playerName §cNão existe ou está offline!")
+				return
+			}else{
+				player = Bukkit.getPlayer(playerName)
 			}
 		}
 
-		if (user == null) {
-			p0.sendMessage("§cUsuário inválido!")
-			return true
-		}
+		if(gameMode.matches("([0-3]|survival|creative|adventure|spectator)".toRegex())){
 
-		var gameMode: GameMode? = null
-		val gmNumber = gameModeArg.toIntOrNull()
+			gm = when(gameMode){
+				"0" -> "survival"
+				"1" -> "creative"
+				"2" -> "adventure"
+				"3" -> "spectator"
+				else -> gameMode
+			}
 
-		if (gmNumber != null && gmNumber in 0 until GameMode.values().size) {
-			gameMode = GameMode.getByValue(gmNumber)
-		} else {
-			try {
-				gameMode = GameMode.valueOf(gameModeArg.toUpperCase())
-			} catch (e: Exception) {}
-		}
+			player.gameMode = GameMode.valueOf(gm.toUpperCase())
 
-		if (gameMode == null) {
-			p0.sendMessage("§9${gameModeArg}§c não é um modo de jogo válido!")
-		} else {
-			user.gameMode = gameMode
-			p0.sendMessage("§aModo de jogo de §b${user.name}§a foi alterado para §9${gameMode.name}§a!")
+			sender.sendMessage("§aModo de jogo de §b${player.name}§a foi alterado para §9${gm}§a!")
+		}else{
+			sender.sendMessage("§b$gameMode §cNão é um modo de jogo válido!")
 		}
-		return true
 	}
 }

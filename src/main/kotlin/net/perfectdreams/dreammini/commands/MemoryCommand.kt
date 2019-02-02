@@ -1,25 +1,21 @@
 package net.perfectdreams.dreammini.commands
 
-import net.perfectdreams.libs.acf.BaseCommand
-import net.perfectdreams.libs.acf.annotation.CatchUnknown
-import net.perfectdreams.libs.acf.annotation.CommandAlias
-import net.perfectdreams.libs.acf.annotation.CommandPermission
-import net.perfectdreams.libs.acf.annotation.Default
+import net.perfectdreams.commands.annotation.Subcommand
+import net.perfectdreams.commands.bukkit.SparklyCommand
+import net.perfectdreams.dreammini.DreamMini
 import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.command.CommandSender
 import java.lang.management.ManagementFactory
 import java.util.*
 
-@CommandAlias("memory|mem|uptime")
-@CommandPermission("dreammini.memory")
-class MemoryCommand : BaseCommand() {
-	@Default
-	@CatchUnknown
-	fun onCommand(p0: CommandSender, p3: Array<String>): Boolean {
-		val arg = p3.getOrNull(0)
+class MemoryCommand(val m: DreamMini) : SparklyCommand(arrayOf("memory", "mem", "uptime")){
 
-		if (arg == "worlds") {
+	@Subcommand
+	fun root(sender: CommandSender, args: Array<String>){
+		val arg = args.getOrNull(0)
+
+		if(arg == "worlds"){
 			for (world in Bukkit.getWorlds()) {
 				val type = when (world.environment) {
 					World.Environment.NORMAL -> "Overworld"
@@ -33,23 +29,21 @@ class MemoryCommand : BaseCommand() {
 					tileEntities += it.tileEntities.size
 				}
 
-				p0.sendMessage("§e${world.name} §b$type")
-				p0.sendMessage("§8• §bChunks: §3${world.loadedChunks.size} §bEntities: §3${world.entities.size} §bTile Entities: §3${tileEntities}")
+				sender.sendMessage("§e${world.name} §b$type")
+				sender.sendMessage("§8• §bChunks: §3${world.loadedChunks.size} §bEntities: §3${world.entities.size} §bTile Entities: §3${tileEntities}")
 			}
-			return true
 		}
 
-		p0.sendMessage("§bUptime: §3${formatDateDiff(ManagementFactory.getRuntimeMXBean().startTime)}")
-		p0.sendMessage("§bMemória Máxima: §3${(Runtime.getRuntime().maxMemory() / 1024 / 1024)}MB")
-		p0.sendMessage("§bMemória Alocada: §3${(Runtime.getRuntime().totalMemory() / 1024 / 1024)}MB")
-		p0.sendMessage("§bMemória Livre: §3${(Runtime.getRuntime().freeMemory() / 1024 / 1024)}MB")
-		p0.sendMessage("§7Para ver mais informações, use §6/memory worlds")
-		return true
+		sender.sendMessage("§bUptime: §3${formatDateDiff(ManagementFactory.getRuntimeMXBean().startTime)}")
+		sender.sendMessage("§bMemória Máxima: §3${(Runtime.getRuntime().maxMemory() / 1024 / 1024)}MB")
+		sender.sendMessage("§bMemória Alocada: §3${(Runtime.getRuntime().totalMemory() / 1024 / 1024)}MB")
+		sender.sendMessage("§bMemória Livre: §3${(Runtime.getRuntime().freeMemory() / 1024 / 1024)}MB")
+		sender.sendMessage("§7Para ver mais informações, use §6/memory worlds")
 	}
 
 	private val maxYears = 100000
 
-	fun dateDiff(type: Int, fromDate: Calendar, toDate: Calendar, future: Boolean): Int {
+	private fun dateDiff(type: Int, fromDate: Calendar, toDate: Calendar, future: Boolean): Int {
 		val year = Calendar.YEAR
 
 		val fromYear = fromDate.get(year)
@@ -70,14 +64,14 @@ class MemoryCommand : BaseCommand() {
 		return diff
 	}
 
-	fun formatDateDiff(date: Long): String {
+	private fun formatDateDiff(date: Long): String {
 		val c = GregorianCalendar()
 		c.timeInMillis = date
 		val now = GregorianCalendar()
 		return formatDateDiff(now, c)
 	}
 
-	fun formatDateDiff(fromDate: Calendar, toDate: Calendar): String {
+	private fun formatDateDiff(fromDate: Calendar, toDate: Calendar): String {
 		var future = false
 		if (toDate == fromDate) {
 			return "agora"
