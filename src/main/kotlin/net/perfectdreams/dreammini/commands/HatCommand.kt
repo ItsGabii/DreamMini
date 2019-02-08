@@ -28,7 +28,7 @@ class HatCommand(val m: DreamMini) : SparklyCommand(arrayOf("hat", "capacete", "
 			val type = item.type
 
 			player.inventory.itemInMainHand = player.inventory.helmet
-			
+
 			player.inventory.helmet = item
 
 			if(type != Material.AIR){

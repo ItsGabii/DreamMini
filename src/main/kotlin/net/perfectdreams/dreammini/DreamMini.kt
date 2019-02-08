@@ -5,10 +5,7 @@ import com.okkero.skedule.schedule
 import net.perfectdreams.dreamcore.utils.*
 import net.perfectdreams.dreamcore.utils.extensions.hasStoredMetadataWithKey
 import net.perfectdreams.dreammini.commands.*
-import net.perfectdreams.dreammini.utils.AtendenteListener
-import net.perfectdreams.dreammini.utils.DiscordCommandRelayer
-import net.perfectdreams.dreammini.utils.TpaManager
-import net.perfectdreams.dreammini.utils.UnknownCommandListener
+import net.perfectdreams.dreammini.utils.*
 import org.bukkit.Color
 import org.bukkit.FireworkEffect
 import org.bukkit.Material
@@ -50,6 +47,9 @@ class DreamMini : KotlinPlugin(), Listener {
 		}
 		if (config.getBoolean("fancy-unknown-command")) {
 			registerEvents(UnknownCommandListener(this))
+		}
+		if (config.getBoolean("disable-phantoms")) {
+			registerEvents(DisablePhantomsListener(this))
 		}
 		if (config.getBoolean("atendente-da-loja")) {
 			val listener = AtendenteListener(this)
