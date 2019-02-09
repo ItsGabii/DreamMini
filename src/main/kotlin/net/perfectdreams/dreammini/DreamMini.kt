@@ -86,6 +86,7 @@ class DreamMini : KotlinPlugin(), Listener {
 		registerCommand(TpaAceitarCommand(this))
 		registerCommand(SpawnCommand(this))
 		registerCommand(CalculatorCommand(this))
+		registerCommand(OpenInvCommand(this))
 	}
 
 	override fun softDisable() {
