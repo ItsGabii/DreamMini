@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender
 import java.lang.management.ManagementFactory
 import java.util.*
 
-class MemoryCommand(val m: DreamMini) : SparklyCommand(arrayOf("memory", "mem", "uptime")){
+class MemoryCommand(val m: DreamMini) : SparklyCommand(arrayOf("memory", "mem", "uptime"), permission = "dreammini.memory"){
 
 	@Subcommand
 	fun root(sender: CommandSender, args: Array<String>){

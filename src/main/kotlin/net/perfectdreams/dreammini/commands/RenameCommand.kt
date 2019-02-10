@@ -2,22 +2,16 @@ package net.perfectdreams.dreammini.commands
 
 import net.perfectdreams.commands.annotation.Subcommand
 import net.perfectdreams.commands.bukkit.SparklyCommand
-import net.perfectdreams.dreamcore.utils.generateCommandInfo
 import net.perfectdreams.dreamcore.utils.translateColorCodes
 import net.perfectdreams.dreammini.DreamMini
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
-class RenameCommand(val m: DreamMini) : SparklyCommand(arrayOf("rename", "renomear")){
+class RenameCommand(val m: DreamMini) : SparklyCommand(arrayOf("rename", "renomear"), permission = "dreammini.rename"){
 
 	@Subcommand
-	fun root(sender: Player){
-		sender.sendMessage(generateCommandInfo("rename <newname>"))
-	}
-
-	@Subcommand
-	fun rename(sender: Player, itemName: String){
-		val name = itemName.translateColorCodes()
+	fun root(sender: Player, itemName: Array<String>){
+		val name = itemName.joinToString(" ").translateColorCodes()
 
 		val item = sender.inventory.itemInMainHand
 		val type = item?.type

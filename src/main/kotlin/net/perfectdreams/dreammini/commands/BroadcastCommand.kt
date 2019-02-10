@@ -3,8 +3,6 @@ package net.perfectdreams.dreammini.commands
 import net.perfectdreams.commands.bukkit.SparklyCommand
 import net.perfectdreams.commands.annotation.Subcommand
 import net.perfectdreams.dreamcore.utils.generateCommandInfo
-import net.perfectdreams.dreamcore.utils.commands.annotation.ArgumentType
-import net.perfectdreams.dreamcore.utils.commands.annotation.InjectArgument
 import net.perfectdreams.dreammini.DreamMini
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender

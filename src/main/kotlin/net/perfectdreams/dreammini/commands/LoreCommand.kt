@@ -7,7 +7,7 @@ import net.perfectdreams.dreammini.DreamMini
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
-class LoreCommand(val m: DreamMini) : SparklyCommand(arrayOf("lore", "changedescription")){
+class LoreCommand(val m: DreamMini) : SparklyCommand(arrayOf("lore", "changedescription"), permission = "dreammini.lore"){
 
 	@Subcommand
 	fun lore(sender: Player, name: Array<String>){
