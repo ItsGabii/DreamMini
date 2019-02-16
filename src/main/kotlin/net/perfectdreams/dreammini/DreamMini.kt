@@ -2,24 +2,29 @@ package net.perfectdreams.dreammini
 
 import com.okkero.skedule.CoroutineTask
 import com.okkero.skedule.schedule
+import net.perfectdreams.commands.annotation.InjectArgument
 import net.perfectdreams.dreamcore.utils.*
+import net.perfectdreams.dreamcore.utils.commands.annotation.ArgumentType
 import net.perfectdreams.dreamcore.utils.extensions.hasStoredMetadataWithKey
 import net.perfectdreams.dreammini.commands.*
 import net.perfectdreams.dreammini.utils.*
-import org.bukkit.Color
-import org.bukkit.FireworkEffect
-import org.bukkit.Material
-import org.bukkit.Particle
+import org.bukkit.*
+import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Firework
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
+import org.bukkit.event.block.Action
+import org.bukkit.event.block.BlockIgniteEvent
 import org.bukkit.event.block.SignChangeEvent
+import org.bukkit.event.entity.EntityCombustEvent
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.CraftItemEvent
 import org.bukkit.event.player.PlayerDropItemEvent
+import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 
@@ -274,4 +279,23 @@ class DreamMini : KotlinPlugin(), Listener {
 			e.deathMessage = null
 		}
 	}
+
+	@EventHandler
+	fun onSetFire (e: BlockIgniteEvent){
+		val entity : Entity = e.ignitingEntity
+		if(e.cause == BlockIgniteEvent.IgniteCause.FLINT_AND_STEEL && entity is Player) {
+			entity.playSound(entity.location,"perfectdreams.sfx.fogobicho", 1F, 1F)
+		} else {
+			return
+		}
+	}
+    @EventHandler
+    fun FaleceuSfx (e: PlayerDeathEvent){
+        val entity : Entity = e.entity
+        if (entity is Player) {
+            entity.playSound(entity.location, "perfectdreams.sfx.faleceu", 1F, 1F)
+        }else{
+            return
+        }
+    }
 }
